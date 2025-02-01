@@ -16,7 +16,7 @@ Options:
     # Parse arguments
     local GITHUB_REPO=""
     local OUTPUT_FILE=""
-    
+
     while [[ $# -gt 0 ]]; do
         case "$1" in
             -u|--url)
@@ -85,9 +85,9 @@ Options:
     # Define output file name if not provided
     if [[ -z "$OUTPUT_FILE" ]]; then
         if [[ -n "$LATEST_TAG" ]]; then
-            OUTPUT_FILE="${GITHUB_USER}-${REPO_NAME}_${LATEST_TAG}"
+            OUTPUT_FILE="${GITHUB_USER}_${REPO_NAME}_${LATEST_TAG}"
         else
-            OUTPUT_FILE="${GITHUB_USER}-${REPO_NAME}"
+            OUTPUT_FILE="${GITHUB_USER}_${REPO_NAME}"
         fi
     fi
 
