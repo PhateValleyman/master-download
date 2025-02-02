@@ -3,12 +3,17 @@ name: Manual workflow
 on:
   release:
     types: [published]
-
   workflow_dispatch:
+  permissions:
+    contents: "write"
+  env:
+    GO_VERSION: 1.23.4
+    CGO_ENABLED: 1
+
     inputs:
       name:
         description: 'Testing workflow'
-        default: 'android-build'
+        default: 'android-13'
         required: true
         type: string
 
@@ -21,11 +26,14 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5.3.0
         with:
-          go-version: '1.23.5'
+          go-version: ${{ env.GO_VERSION }}
           cache: 'false'
           
-      - name: 'android-build'
-        run: GOOS=android GOARCH=arm64 go build -trimpath -v -x -ldflags=' -s' -o ./bin/golang/master-download ./src/golang/master-download.go
+      - name: 'android-13'
+        run: CGO_ENABLED=1 GOOS=android GOARCH=arm64 go build -trimpath -v -x -ldflags=' -s' -o ./bin/golang/master-download_aarch64 ./src/golang/master-download.go
+
+      - name: 'android-11'
+        run: CGO_ENABLED=1 GOOS=android GOARCH=arm GOARM='7,hardfloat' go build -trimpath -v -x -ldflags=' -s' -o ./bin/golang/master-download_armv7 ./src/golang/master-download.go
 
       - name: release
         uses: Shopify/upload-to-release@v2.0.0
