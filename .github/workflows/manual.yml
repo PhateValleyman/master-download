@@ -30,12 +30,12 @@ jobs:
         run: GOOS=android GOARCH=arm64 go build -trimpath -v -x -ldflags=' -s' -o ./bin/golang/master-download ./src/golang/master-download.go
 
       - name: release
-        uses: alexellis/upload-assets@0.4.1
+        uses: Shopify/upload-to-release@v2.0.0
         with:
-          asset_paths: '["./bin/golang/master-download"]'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+          name: master-download
+          path: ./bin/golang/master-download
+          content-type: application/octet-stream
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
 
   greet:
