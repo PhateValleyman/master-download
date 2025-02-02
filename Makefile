@@ -1,12 +1,5 @@
 # Makefile pro správu a kompilaci souborů v různých jazycích
 
-# Adresáře
-SRC_BASH := ./src/bash
-SRC_GOLANG := ./src/golang
-SRC_PYTHON := ./src/python
-SRC_RUBY := ./src/ruby
-SRC_PERL := ./src/perl
-
 # Cílové adresáře pro binární soubory
 BIN_DIR := ./bin
 BIN_GOLANG := $(BIN_DIR)/golang
@@ -15,11 +8,11 @@ BIN_RUBY := $(BIN_DIR)/ruby
 BIN_PERL := $(BIN_DIR)/perl
 
 # Cílové soubory
-BASH_TARGET := $(SRC_BASH)/master-download.sh
-GOLANG_TARGET := $(SRC_GOLANG)/master-download.go
-PYTHON_TARGET := $(SRC_PYTHON)/master-download.py
-RUBY_TARGET := $(SRC_RUBY)/master-download.rb
-PERL_TARGET := $(SRC_PERL)/master-download.pl
+BASH_TARGET := ./src/bash/master-download.sh
+GOLANG_TARGET := ./src/golang/master-download.go
+PYTHON_TARGET := ./src/python/master-download.py
+RUBY_TARGET := ./src/ruby/master-download.rb
+PERL_TARGET := ./src/perl/master-download.pl
 
 # PyInstaller cíle
 PYTHON_BUILD_DIR := ./build/python
@@ -69,7 +62,7 @@ build: build-go build-py build-ruby build-perl
 .PHONY: build-go
 build-go: $(BIN_GOLANG) $(GOLANG_TARGET)
 	@echo "Kompilace Go souboru..."
-	@cd $(SRC_GOLANG) && go build -v -x -o $(BIN_GOLANG)/master-download $(SRC_GOLANG)/master-download.go
+	@go build -trimpath -v -x -o $(BIN_GOLANG)/master-download $(GOLANG_TARGET)
 	@echo "Go soubor zkompilován do $(BIN_GOLANG)/master-download."
 
 # Kompilace Python souboru pomocí PyInstaller
@@ -78,6 +71,7 @@ build-py: $(BIN_PYTHON) $(PYTHON_TARGET)
 	@echo "Kompilace Python souboru pomocí PyInstaller..."
 	@mkdir -p $(PYTHON_BUILD_DIR)
 	@pyinstaller --onefile --distpath $(PYTHON_DIST_DIR) --workpath $(PYTHON_BUILD_DIR) --specpath $(PYTHON_BUILD_DIR) $(PYTHON_TARGET)
+	@rm -r ./build
 	@echo "Python soubor zkompilován do $(BIN_PYTHON)/master-download."
 
 # Kopírování Ruby skriptu
@@ -104,7 +98,7 @@ run: run-go run-py run-ruby run-perl
 .PHONY: run-go
 run-go: $(GOLANG_TARGET)
 	@echo "Spouštění Go skriptu..."
-	@cd $(SRC_GOLANG) && go run master-download.go
+	@go run $(GOLANG_TARGET)
 
 # Spuštění Python skriptu
 .PHONY: run-py
