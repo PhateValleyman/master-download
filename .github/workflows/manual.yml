@@ -1,6 +1,9 @@
 name: Manual workflow
 
 on:
+  release:
+    types: [published]
+
   workflow_dispatch:
     inputs:
       name:
@@ -25,6 +28,16 @@ jobs:
 
       - name: 'android-build'
         run: GOOS=android GOARCH=arm64 go build -trimpath -v -x -ldflags=' -s' -o ./bin/golang/master-download ./src/golang/master-download.go
+
+      - name: release
+        uses: actions/upload-release-asset@v2
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./bin/golang/master-download
+          asset_name: master-download
+          asset_content_type: application/octet-stream
+
+
 
   greet:
     runs-on: ubuntu-22.04
