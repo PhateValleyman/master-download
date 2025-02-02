@@ -36,10 +36,3 @@ jobs:
           path: ./bin/golang/master-download
           content-type: application/octet-stream
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-
-
-  greet:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Send greeting
-        run: echo "Hello ${{ github.event.inputs.name }}"
