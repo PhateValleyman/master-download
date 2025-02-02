@@ -1,21 +1,23 @@
-name: Manual workflow
+name: 'golang'
 
 on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      name:
+        description: 'Select Android version to build'
+        default: 'android-13'
+        required: true
+        type: choice
+        options:
+          - android-13
+          - android-11
   permissions:
     contents: "write"
   env:
     GO_VERSION: 1.23.4
     CGO_ENABLED: 1
-
-    inputs:
-      name:
-        description: 'Testing workflow'
-        default: 'android-13'
-        required: true
-        type: string
 
 jobs:
   build:
@@ -28,17 +30,19 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: 'false'
-          
-      - name: 'android-13'
-        run: CGO_ENABLED=1 GOOS=android GOARCH=arm64 go build -trimpath -v -x -ldflags=' -s' -o ./bin/golang/master-download_aarch64 ./src/golang/master-download.go
 
-      - name: 'android-11'
-        run: CGO_ENABLED=1 GOOS=android GOARCH=arm GOARM='7,hardfloat' go build -trimpath -v -x -ldflags=' -s' -o ./bin/golang/master-download_armv7 ./src/golang/master-download.go
+      - name: Build for Android
+        run: |
+          if [ "${{ inputs.name }}" == "android-13" ]; then
+            CGO_ENABLED=${{ env.CGO_ENABLED }} GOOS=android GOARCH=arm64 go build -trimpath -v -x -ldflags=' -s' -o ./bin/golang/master-download_aarch64 ./src/golang/master-download.go
+          elif [ "${{ inputs.name }}" == "android-11" ]; then
+            CGO_ENABLED=${{ env.CGO_ENABLED }} GOOS=android GOARCH=arm GOARM=7 go build -trimpath -v -x -ldflags=' -s' -o ./bin/golang/master-download_armv7 ./src/golang/master-download.go
+          fi
 
-      - name: release
-        uses: Shopify/upload-to-release@v2.0.0
-        with:
-          name: master-download
-          path: ./bin/golang/master-download
-          content-type: application/octet-stream
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Upload to Release
+      #   uses: Shopify/upload-to-release@v2.0.0
+      #   with:
+      #     name: master-download
+      #     path: ./bin/golang/master-download
+      #     content-type: application/octet-stream
+      #     repo-token: ${{ secrets.GITHUB_TOKEN }}
