@@ -1,44 +1,33 @@
-# This is a basic workflow that is manually triggered
 name: Manual workflow
-# Controls when the action will run. Workflow runs when manually triggered using the UI
-# or API.
+
 on:
   workflow_dispatch:
     inputs:
       name:
-        # Friendly description to be shown in the UI instead of 'name'
         description: 'Testing workflow'
-        # Default value if no value is explicitly provided
         default: 'android-build'
-        # Input has to be provided for the workflow to run
         required: true
-        # The data type of the input
         type: string
 
 jobs:
-
-    build:
+  build:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Go
-      uses: actions/setup-go@v5.3.0
-      with:
-        go-version: '1.23.5'
-        go-version-file: './go.mod'
-        cache: 'false'
-        architecture: 'arm64'
+      - name: Set up Go
+        uses: actions/setup-go@v5.3.0
+        with:
+          go-version: '1.23.5'
+          go-version-file: './go.mod'
+          cache: 'false'
+          architecture: 'arm64'
 
-    - name: 'android-build'
-      run: GOOS=android GOARCH=arm64 go build -trimpath -v -x -ldflags=' -s' -o ./bin/golang/master-download ./src/golang/master-download.go
+      - name: 'android-build'
+        run: GOOS=android GOARCH=arm64 go build -trimpath -v -x -ldflags=' -s' -o ./bin/golang/master-download ./src/golang/master-download.go
 
-
-  greet:  
+  greet:
     runs-on: ubuntu-22.04
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Runs a single command using the runners shell
-    - name: Send greeting
-      run: echo "Hello ${{ inputs.name }}"
+      - name: Send greeting
+        run: echo "Hello ${{ github.event.inputs.name }}"
