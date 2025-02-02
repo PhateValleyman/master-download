@@ -37,6 +37,11 @@ help:
 	@echo "  build-py     Zkompiluje Python soubor do ./bin/python/master-download"
 	@echo "  build-ruby   Zkopíruje Ruby skript do ./bin/ruby/master-download"
 	@echo "  build-perl   Zkopíruje Perl skript do ./bin/perl/master-download"
+	@echo "  run          Spustí všechny skripty (Go, Python, Ruby, Perl)"
+	@echo "  run-go       Spustí Go skript (go run)"
+	@echo "  run-py       Spustí Python skript"
+	@echo "  run-ruby     Spustí Ruby skript"
+	@echo "  run-perl     Spustí Perl skript"
 	@echo "  clean        Smaže vygenerované soubory a adresáře"
 	@echo ""
 
@@ -90,6 +95,34 @@ build-perl: $(BIN_PERL) $(PERL_TARGET)
 	@cp $(PERL_TARGET) $(BIN_PERL)/master-download
 	@chmod +x $(BIN_PERL)/master-download
 	@echo "Perl skript zkopírován do $(BIN_PERL)/master-download."
+
+# Spuštění všech skriptů
+.PHONY: run
+run: run-go run-py run-ruby run-perl
+
+# Spuštění Go skriptu
+.PHONY: run-go
+run-go: $(GOLANG_TARGET)
+	@echo "Spouštění Go skriptu..."
+	@cd $(SRC_GOLANG) && go run master-download.go
+
+# Spuštění Python skriptu
+.PHONY: run-py
+run-py: $(PYTHON_TARGET)
+	@echo "Spouštění Python skriptu..."
+	@python3 $(PYTHON_TARGET)
+
+# Spuštění Ruby skriptu
+.PHONY: run-ruby
+run-ruby: $(RUBY_TARGET)
+	@echo "Spouštění Ruby skriptu..."
+	@ruby $(RUBY_TARGET)
+
+# Spuštění Perl skriptu
+.PHONY: run-perl
+run-perl: $(PERL_TARGET)
+	@echo "Spouštění Perl skriptu..."
+	@perl $(PERL_TARGET)
 
 # Vyčištění vygenerovaných souborů
 .PHONY: clean
