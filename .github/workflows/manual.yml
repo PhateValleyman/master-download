@@ -22,10 +22,8 @@ jobs:
         uses: actions/setup-go@v5.3.0
         with:
           go-version: '1.23.5'
-          go-version-file: './go.mod'
           cache: 'false'
-          architecture: 'arm64'
-
+          
       - name: 'android-build'
         run: GOOS=android GOARCH=arm64 go build -trimpath -v -x -ldflags=' -s' -o ./bin/golang/master-download ./src/golang/master-download.go
 
