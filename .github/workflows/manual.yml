@@ -10,11 +10,11 @@ on:
         required: true
         type: string
 
-      name: 'greet'
-        description: 'greet test'
-        default: 'greet'
-        required: true
-        type: string
+   #   name: 'greet'
+  #      description: 'greet test'
+  #      default: 'greet'
+#        required: true
+#        type: string
 
 
 jobs:
