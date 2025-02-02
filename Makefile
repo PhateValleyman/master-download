@@ -69,7 +69,7 @@ build: build-go build-py build-ruby build-perl
 .PHONY: build-go
 build-go: $(BIN_GOLANG) $(GOLANG_TARGET)
 	@echo "Kompilace Go souboru..."
-	@cd $(SRC_GOLANG) && go build -o $(BIN_GOLANG)/master-download master-download.go
+	@cd $(SRC_GOLANG) && go build -v -x -o $(BIN_GOLANG)/master-download $(SRC_GOLANG)/master-download.go
 	@echo "Go soubor zkompilován do $(BIN_GOLANG)/master-download."
 
 # Kompilace Python souboru pomocí PyInstaller
